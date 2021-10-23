@@ -1,12 +1,29 @@
-<form>
+<!-- declara uma variável de template (#) que está associada a diretiva ngForm -->
+<!-- faz o binding de eventos para o evento submit e atribui a um método do component -->
+<!-- por debaixo dos panos o Angular cria um formulário reativo -->
+<form #f="ngForm" (ngSubmit)="onSubmit(f)">
   <div class="form-group">
     <label for="nome">Nome</label>
-    <input id="nome" class="form-control" type="email">
+    <!-- a diretiva ngModel precisa que seja declarado o atributo name do elemento input -->
+    <!--
+    a forma mais simples de relacionar um campo ao seu valor é somente declarando a diretiva ngModel
+    <input id="nome" class="form-control" type="email" name="nome"
+      ngModel>
+    -->
+    <input id="nome" class="form-control" type="email" name="nome"
+      ngModel>
   </div>
 
   <div class="form-group">
     <label for="email">E-mail</label>
-    <input id="email" class="form-control" type="email" placeholder="nome@email.com">
+    <!-- a diretiva ngModel precisa que seja declarado o atributo name do elemento input -->
+    <!--
+    a forma mais simples de relacionar um campo ao seu valor é somente declarando a diretiva ngModel
+    <input id="email" class="form-control" type="email" name="email"
+      placeholder="nome@email.com" ngModel>
+     -->
+    <input id="email" class="form-control" type="email" name="email"
+      placeholder="nome@email.com" ngModel>
   </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
