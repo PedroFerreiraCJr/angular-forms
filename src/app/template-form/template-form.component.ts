@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, NgModel } from '@angular/forms';
+import { AbstractControl, NgModel, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -42,15 +42,56 @@ export class TemplateFormComponent implements OnInit {
     };
   }
 
-  consultarCEP(event: any): void {
+  consultarCEP(event: any, form: NgForm): void {
     const value = event?.target?.value.replace(/\D/g, '');
     if (value) {
       const validarCEP = /^[0-9]{8}$/;
       if (validarCEP.test(value)) {
+        this.resetarDadosForm(form);
         this.http.get(`//viacep.com.br/ws/${value}/json`).subscribe((result) => {
           console.log(result);
+          this.popularDadosForm(result, form);
         });
       }
     }
+  }
+
+  popularDadosForm(dados: any, form: NgForm): void {
+    // configura campo a campo dos valores do formulário
+    form.setValue({
+      nome: form.value.nome,
+      email: form.value.email,
+      endereco: {
+        rua: dados.logradouro,
+        cep: dados.cep,
+        numero: '',
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.localidade,
+        estado: dados.uf
+      }
+    });
+
+    form.form.patchValue({
+      endereco: {
+        rua: dados.logradouro,
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.localidade,
+        estado: dados.uf
+      }
+    });
+  }
+
+  resetarDadosForm(formulario: NgForm): void {
+    formulario.form.patchValue({
+      endereco: {
+        rua: null,
+        complemento: null,
+        bairro: null,
+        cidade: null,
+        estado: null
+      }
+    });
   }
 }

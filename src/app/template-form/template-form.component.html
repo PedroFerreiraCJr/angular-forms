@@ -32,7 +32,7 @@
         <input id="cep" class="form-control" type="text" name="cep"
           ngModel #cep="ngModel"
           [ngClass]="aplicarCSSErro(cep)"
-          (blur)="consultarCEP($event)"
+          (blur)="consultarCEP($event, f)"
           required>
         <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched(cep.control)"
           mensagem="Cep obrigatório">
