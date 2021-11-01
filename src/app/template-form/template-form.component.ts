@@ -21,9 +21,10 @@ export class TemplateFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public onSubmit(form: any): void {
-    console.log(form);
-    console.log(this.usuario);
+  public onSubmit(form: NgForm): void {
+    this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(form.value)).subscribe((result) => {
+      console.log(result);
+    });
   }
 
   public fieldInvalidAndTouched(field: AbstractControl): boolean {
