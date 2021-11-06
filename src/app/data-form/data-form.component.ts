@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
@@ -11,7 +12,9 @@ export class DataFormComponent implements OnInit {
   // variável que representa o formulário
   formulario!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private http: HttpClient) { }
 
   ngOnInit(): void {
     /*
@@ -26,6 +29,13 @@ export class DataFormComponent implements OnInit {
     this.formulario = this.formBuilder.group({
       nome: [null],
       email: [null]
+    });
+  }
+
+  public onSubmit(): void {
+    console.log(this.formulario.value);
+    this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(this.formulario.value)).subscribe((result) => {
+      console.log(result);
     });
   }
 }
