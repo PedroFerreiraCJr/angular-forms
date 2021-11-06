@@ -1,1 +1,20 @@
-<p>data-form works!</p>
+<form [formGroup]="formulario">
+  <div class="form-row">
+    <div class="form-group col-sm-12">
+      <label for="nome">Nome</label>
+      <input id="nome" class="form-control" type="email"  formControlName="nome">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-sm-12">
+      <label for="email">E-mail</label>
+      <input id="email" class="form-control" type="email" formControlName="email"
+        placeholder="nome@email.com">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+
+  <app-form-debug [form]="formulario"></app-form-debug>
+</form>
