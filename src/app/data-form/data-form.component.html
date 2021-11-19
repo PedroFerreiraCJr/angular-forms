@@ -2,16 +2,29 @@
   <div class="form-row">
     <div class="form-group col-sm-12">
       <label for="nome">Nome</label>
-      <input id="nome" class="form-control" type="email"  formControlName="nome">
+      <input id="nome" class="form-control" type="email"  formControlName="nome"
+      [ngClass]="aplicarCSSErro('nome')">
     </div>
+    <!-- outra forma de realizar a validação dos campos de formulário é acessando a propriedade
+      de dentro do componente e suas ramificações, ou componentes internos -->
+    <app-campo-control-erro [mostrarErro]="!formulario.controls['nome'].valid && formulario.controls['nome'].touched"
+      mensagem="Nome obrigatório">
+    </app-campo-control-erro>
   </div>
 
   <div class="form-row">
     <div class="form-group col-sm-12">
       <label for="email">E-mail</label>
       <input id="email" class="form-control" type="email" formControlName="email"
-        placeholder="nome@email.com">
+        placeholder="nome@email.com"
+        [ngClass]="aplicarCSSErro('email')">
     </div>
+    <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('email')"
+      mensagem="Nome obrigatório">
+    </app-campo-control-erro>
+    <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
+      mensagem="E-mail inválido">
+    </app-campo-control-erro>
   </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>

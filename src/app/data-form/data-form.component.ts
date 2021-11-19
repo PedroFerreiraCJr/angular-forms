@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-data-form',
@@ -42,5 +42,43 @@ export class DataFormComponent implements OnInit {
 
   public resetar(): void {
     this.formulario.reset();
+  }
+
+  aplicarCSSErro(campo: string): any {
+    const field: AbstractControl | null = this.formulario.get(campo);
+    return {
+      'is-invalid': this.fieldInvalidAndTouched(field),
+      'is-valid': this.fieldValidAndTouched(field)
+    };
+  }
+
+  public fieldInvalidAndTouched(field: AbstractControl | string | null): boolean {
+    if (field) {
+      if (typeof (field) === 'string') {
+        return (!this.formulario.get(field)?.valid && this.formulario.get(field)?.touched) || false;
+      }
+      return (!field?.valid && field?.touched) || false;
+    }
+
+    return false;
+  }
+
+  public fieldValidAndTouched(field: AbstractControl | string | null): boolean {
+    if (field) {
+      if (typeof (field) === 'string') {
+        return (this.formulario.get(field)?.valid && this.formulario.get(field)?.touched) || false;
+      }
+      return (field?.valid && field?.touched) || false;
+    }
+
+    return false;
+  }
+
+  public verificarEmailInvalido(): boolean {
+    const fieldEmail = this.formulario.get('email');
+    if (fieldEmail?.errors) {
+      return fieldEmail.errors['email'] && fieldEmail.touched;
+    }
+    return false;
   }
 }
