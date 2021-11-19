@@ -24,6 +24,7 @@ export class TemplateFormComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(form.value)).subscribe((result) => {
       console.log(result);
+      form.form.reset();
     });
   }
 

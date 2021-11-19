@@ -36,6 +36,11 @@ export class DataFormComponent implements OnInit {
     console.log(this.formulario.value);
     this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(this.formulario.value)).subscribe((result) => {
       console.log(result);
+      this.resetar();
     });
+  }
+
+  public resetar(): void {
+    this.formulario.reset();
   }
 }
