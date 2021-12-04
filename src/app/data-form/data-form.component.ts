@@ -28,7 +28,14 @@ export class DataFormComponent implements OnInit {
     // forma simplificada de construir os campos do formulário
     this.formulario = this.formBuilder.group({
       nome: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]] // o validator de email só está disponível a partir do Angular 4
+      email: [null, [Validators.required, Validators.email]], // o validator de email só está disponível a partir do Angular 4
+      cep: [null, Validators.required],
+      numero: [null, Validators.required],
+      complemento: [null],
+      rua: [null, Validators.required],
+      bairro: [null, Validators.required],
+      cidade: [null, Validators.required],
+      estado: [null, Validators.required]
     });
   }
 
