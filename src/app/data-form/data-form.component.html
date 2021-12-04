@@ -37,8 +37,9 @@
         <label for="cep">CEP</label>
         <input id="cep" class="form-control" type="text"
           formControlName="cep"
-          [ngClass]="aplicarCSSErro('endereco.cep')">
-        <app-campo-control-erro [mostrarErro]="formulario.get('endereco.cep')?.invalid || false"
+          [ngClass]="aplicarCSSErro('endereco.cep')"
+          (blur)="consultarCEP()">
+        <app-campo-control-erro [mostrarErro]="(formulario.get('endereco.cep')?.invalid || false) && formulario.get('endereco.cep')?.touched || false"
           mensagem="Cep obrigatório">
         </app-campo-control-erro>
       </div>

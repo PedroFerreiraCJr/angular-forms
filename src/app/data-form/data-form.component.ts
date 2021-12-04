@@ -90,4 +90,42 @@ export class DataFormComponent implements OnInit {
     }
     return false;
   }
+
+  public consultarCEP(): void {
+    const cep = this.formulario.get('endereco.cep')?.value.replace(/\D/g, '');
+    if (cep) {
+      const validarCEP = /^[0-9]{8}$/;
+      if (validarCEP.test(cep)) {
+        this.resetarDadosForm();
+        this.http.get(`//viacep.com.br/ws/${cep}/json`).subscribe((result) => {
+          console.log(result);
+          this.popularDadosForm(result);
+        });
+      }
+    }
+  }
+
+  private popularDadosForm(dados: any): void {
+    this.formulario.patchValue({
+      endereco: {
+        rua: dados.logradouro,
+        complemento: dados.complemento,
+        bairro: dados.bairro,
+        cidade: dados.localidade,
+        estado: dados.uf
+      }
+    });
+  }
+
+  private resetarDadosForm(): void {
+    this.formulario.patchValue({
+      endereco: {
+        rua: null,
+        complemento: null,
+        bairro: null,
+        cidade: null,
+        estado: null
+      }
+    });
+  }
 }
