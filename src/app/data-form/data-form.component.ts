@@ -42,10 +42,24 @@ export class DataFormComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.formulario.value);
-    this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(this.formulario.value)).subscribe((result) => {
-      console.log(result);
-      this.resetar();
+    if (this.formulario.valid) {
+      this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(this.formulario.value)).subscribe((result) => {
+        console.log(result);
+        this.resetar();
+      });
+    }
+    else {
+      this.verificarValidacoesForm(this.formulario);
+    }
+  }
+
+  private verificarValidacoesForm(form: FormGroup): void {
+    Object.keys(form.controls).forEach(campo => {
+      const controle = this.formulario.get(campo);
+      controle?.markAsDirty();
+      if (controle instanceof FormGroup) {
+        this.verificarValidacoesForm(controle);
+      }
     });
   }
 
@@ -64,9 +78,9 @@ export class DataFormComponent implements OnInit {
   public fieldInvalidAndTouched(field: AbstractControl | string | null): boolean {
     if (field) {
       if (typeof (field) === 'string') {
-        return (!this.formulario.get(field)?.valid && this.formulario.get(field)?.touched) || false;
+        return !this.formulario.get(field)?.valid && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false));
       }
-      return (!field?.valid && field?.touched) || false;
+      return (!field?.valid && (field?.touched || field?.dirty)) || false;
     }
 
     return false;
@@ -75,9 +89,9 @@ export class DataFormComponent implements OnInit {
   public fieldValidAndTouched(field: AbstractControl | string | null): boolean {
     if (field) {
       if (typeof (field) === 'string') {
-        return (this.formulario.get(field)?.valid && this.formulario.get(field)?.touched) || false;
+        return this.formulario.get(field)?.valid && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false)) || false;
       }
-      return (field?.valid && field?.touched) || false;
+      return (field?.valid && (field?.touched || field?.dirty)) || false;
     }
 
     return false;
@@ -92,7 +106,7 @@ export class DataFormComponent implements OnInit {
   }
 
   public consultarCEP(): void {
-    const cep = this.formulario.get('endereco.cep')?.value.replace(/\D/g, '');
+    const cep = this.formulario.get('endereco.cep')?.value?.replace(/\D/g, '');
     if (cep) {
       const validarCEP = /^[0-9]{8}$/;
       if (validarCEP.test(cep)) {

@@ -7,7 +7,7 @@
         [ngClass]="aplicarCSSErro('nome')">
       <!-- outra forma de realizar a validação dos campos de formulário é acessando a propriedade
       de dentro do componente e suas ramificações, ou componentes internos -->
-      <app-campo-control-erro [mostrarErro]="!formulario.controls['nome'].valid && formulario.controls['nome'].touched"
+      <app-campo-control-erro [mostrarErro]="!formulario.controls['nome'].valid && (formulario.controls['nome'].touched || formulario.controls['nome'].dirty)"
         mensagem="Nome obrigatório">
       </app-campo-control-erro>
     </div>
@@ -21,7 +21,7 @@
         placeholder="nome@email.com"
         [ngClass]="aplicarCSSErro('email')">
         <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('email')"
-          mensagem="Nome obrigatório">
+          mensagem="E-mail obrigatório">
         </app-campo-control-erro>
         <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
           mensagem="E-mail inválido">
