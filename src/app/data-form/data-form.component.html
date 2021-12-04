@@ -5,12 +5,12 @@
       <input id="nome" class="form-control" type="email"
         formControlName="nome"
         [ngClass]="aplicarCSSErro('nome')">
-    </div>
-    <!-- outra forma de realizar a validação dos campos de formulário é acessando a propriedade
+      <!-- outra forma de realizar a validação dos campos de formulário é acessando a propriedade
       de dentro do componente e suas ramificações, ou componentes internos -->
-    <app-campo-control-erro [mostrarErro]="!formulario.controls['nome'].valid && formulario.controls['nome'].touched"
-      mensagem="Nome obrigatório">
-    </app-campo-control-erro>
+      <app-campo-control-erro [mostrarErro]="!formulario.controls['nome'].valid && formulario.controls['nome'].touched"
+        mensagem="Nome obrigatório">
+      </app-campo-control-erro>
+    </div>
   </div>
 
   <div class="form-row">
@@ -20,23 +20,25 @@
         formControlName="email"
         placeholder="nome@email.com"
         [ngClass]="aplicarCSSErro('email')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('email')"
+          mensagem="Nome obrigatório">
+        </app-campo-control-erro>
+        <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
+          mensagem="E-mail inválido">
+        </app-campo-control-erro>
     </div>
-    <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('email')"
-      mensagem="Nome obrigatório">
-    </app-campo-control-erro>
-    <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
-      mensagem="E-mail inválido">
-    </app-campo-control-erro>
   </div>
 
-  <div>
+  <!-- Para acessar, a partir do template, campos do formulário que são
+    aninhados - como os campos abaixo de endereço - basta usar o operador ponto -->
+  <div formGroupName="endereco">
     <div class="form-row">
       <div class="form-group col-sm-3">
         <label for="cep">CEP</label>
         <input id="cep" class="form-control" type="text"
           formControlName="cep"
-          [ngClass]="aplicarCSSErro('cep')">
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('cep')"
+          [ngClass]="aplicarCSSErro('endereco.cep')">
+        <app-campo-control-erro [mostrarErro]="formulario.get('endereco.cep')?.invalid || false"
           mensagem="Cep obrigatório">
         </app-campo-control-erro>
       </div>
@@ -44,8 +46,8 @@
         <label for="numero">Número</label>
         <input id="numero" class="form-control" type="text"
           formControlName="numero"
-          [ngClass]="aplicarCSSErro('numero')">
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('numero')"
+          [ngClass]="aplicarCSSErro('endereco.numero')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.numero')"
           mensagem="Número obrigatório">
         </app-campo-control-erro>
       </div>
@@ -53,7 +55,7 @@
         <label for="complemento">Complemento</label>
         <input id="complemento" class="form-control" type="text"
           formControlName="complemento"
-          [ngClass]="aplicarCSSErro('complemento')">
+          [ngClass]="aplicarCSSErro('endereco.complemento')">
       </div>
     </div>
 
@@ -62,8 +64,8 @@
         <label for="rua">Rua</label>
         <input id="rua" class="form-control" type="text"
           formControlName="rua"
-          [ngClass]="aplicarCSSErro('rua')" readonly>
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('rua')"
+          [ngClass]="aplicarCSSErro('endereco.rua')" readonly>
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.rua')"
           mensagem="Rua obrigatório">
         </app-campo-control-erro>
       </div>
@@ -74,17 +76,17 @@
         <label for="bairro">Bairro</label>
         <input id="bairro" class="form-control" type="text" name="bairro"
           formControlName="bairro"
-          [ngClass]="aplicarCSSErro('bairro')">
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('bairro')"
+          [ngClass]="aplicarCSSErro('endereco.bairro')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.bairro')"
           mensagem="Bairro obrigatório">
         </app-campo-control-erro>
       </div>
       <div class="form-group col-sm-4">
-        <label for="cidade">Número</label>
+        <label for="cidade">Cidade</label>
         <input id="cidade" class="form-control" type="text"
           formControlName="cidade"
-          [ngClass]="aplicarCSSErro('cidade')">
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('cidade')"
+          [ngClass]="aplicarCSSErro('endereco.cidade')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.cidade')"
           mensagem="Cidade obrigatório">
         </app-campo-control-erro>
       </div>
@@ -92,8 +94,8 @@
         <label for="estado">Estado</label>
         <input id="estado" class="form-control" type="text"
           formControlName="estado"
-          [ngClass]="aplicarCSSErro('estado')">
-        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('estado')"
+          [ngClass]="aplicarCSSErro('endereco.estado')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.estado')"
           mensagem="Estado obrigatório">
         </app-campo-control-erro>
       </div>
