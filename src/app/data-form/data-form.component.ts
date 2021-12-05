@@ -1,6 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+
+import { DropdownService } from './../shared/services/dropdown.service';
+import { EstadoBr } from '../shared/models/estado-br.model';
 
 @Component({
   selector: 'app-data-form',
@@ -11,10 +16,12 @@ export class DataFormComponent implements OnInit {
 
   // variável que representa o formulário
   formulario!: FormGroup;
+  estados!: EstadoBr[];
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private dropDownService: DropdownService) { }
 
   ngOnInit(): void {
     /*
@@ -38,6 +45,11 @@ export class DataFormComponent implements OnInit {
         cidade: [null, Validators.required],
         estado: [null, Validators.required]
       })
+    });
+
+    this.dropDownService.getEstados().subscribe((estados) => {
+      this.estados = estados;
+      console.log(this.estados);
     });
   }
 
