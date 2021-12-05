@@ -93,9 +93,11 @@
       </div>
       <div class="form-group col-sm-3">
         <label for="estado">Estado</label>
-        <input id="estado" class="form-control" type="text"
+        <select id="estado" class="form-control"
           formControlName="estado"
           [ngClass]="aplicarCSSErro('endereco.estado')">
+          <option *ngFor="let estado of estados | async" [value]="estado.sigla">{{ estado.nome }}</option>
+        </select>
         <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('endereco.estado')"
           mensagem="Estado obrigatório">
         </app-campo-control-erro>
