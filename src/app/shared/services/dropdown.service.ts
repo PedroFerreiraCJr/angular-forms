@@ -31,4 +31,11 @@ export class DropdownService {
       { nome: 'ruby', desc: 'Ruby' }
     ];
   }
+
+  public getNewsletter(): any[] {
+    return [
+      { valor: 'sim', desc: 'Sim' },
+      { valor: 'nao', desc: 'Não' }
+    ];
+  }
 }
