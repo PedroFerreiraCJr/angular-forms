@@ -137,6 +137,34 @@
     </div>
   </div>
 
+  <div class="form-row">
+    <div class="form-group col-sm-6">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="checkbox-termos"
+          formControlName="termos"
+          [ngClass]="aplicarCSSErro('termos')">
+        <label class="form-check-label" for="checkbox-termos">Aceito os termos</label>
+      </div>
+      <app-campo-control-erro [mostrarErro]="!formulario.get('termos')?.valid || false"
+          mensagem="Aceite os termos">
+        </app-campo-control-erro>
+    </div>
+
+    <!-- exemplo usando o tipo de campo FormArray -->
+    <div class="form-group col-sm-6">
+      <label for="frameworks">Frameworks</label>
+      <div id="frameworks" class="row">
+        <div class="form-check form-check-inline col-sm-4"
+          formArrayName="frameworks" *ngFor="let item of getControls(); let i = index">
+          <input class="form-check-input" type="checkbox" id="checkbox-frameworks-{{ i }}"
+            [ngClass]="aplicarCSSErro('frameworks')"
+            [formControlName]="i">
+          <label class="form-check-label" for="checkbox-frameworks-{{ i }}">{{ frameworks[i] }}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <button type="submit" class="btn btn-primary">Submit</button>
   <button class="btn btn-secondary" (click)="resetar()">Cancelar</button>
   <button class="btn btn-primary" (click)="setarCargo()">Cargo</button>

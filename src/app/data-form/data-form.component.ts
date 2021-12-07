@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 import { DropdownService } from './../shared/services/dropdown.service';
@@ -17,10 +17,12 @@ export class DataFormComponent implements OnInit {
   // variável que representa o formulário
   formulario!: FormGroup;
   //estados!: EstadoBr[];
-  estados!: Observable<EstadoBr[]>;
-  cargos: any[] = [];
-  tecnologias: any[] = [];
-  newsletterOp: any[] = [];
+  estados!: Observable<EstadoBr[]>;   // valores de estados, select de estado com autocomplete
+  cargos: any[] = [];         // valores de cargos, exemplo de select com uma única opção de seleção
+  tecnologias: any[] = [];    // valores de tecnologias, exemplo de select com multiplas opções de seleção
+  newsletterOp: any[] = [];   // valores da newsletter, exemplo de radio button
+  
+  frameworks = ['Angular 2', 'React', 'Vue', 'Sencha'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,7 +54,9 @@ export class DataFormComponent implements OnInit {
       }),
       cargo: [null],
       tecnologias: [null],
-      newsletter: ['sim']
+      newsletter: ['sim'],
+      termos: [null, Validators.pattern('true')],  // essa é a forma mais simples de validar um campo do tipo toggle
+      frameworks: this.buildFrameworks()
     });
 
     /*
@@ -71,9 +75,26 @@ export class DataFormComponent implements OnInit {
     this.newsletterOp = this.dropDownService.getNewsletter();
   }
 
+  private buildFrameworks(): FormArray {
+    const values = this.frameworks.map(v => new FormControl(false));
+    return this.formBuilder.array(values);
+  }
+
+  getControls() {
+    return (this.formulario.get('frameworks') as FormArray).controls;
+  }
+
   public onSubmit(): void {
+    let valueSubmit = Object.assign({}, this.formulario.value);
+
+    valueSubmit = Object.assign(valueSubmit, {
+      frameworks: valueSubmit.map((v: FormControl, i: number) => {
+        return v ? this.frameworks[i] : null
+      }).filter((v: string) => v !== null)
+    });
+
     if (this.formulario.valid) {
-      this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(this.formulario.value)).subscribe((result) => {
+      this.http.post(`enderecoServer/enderecoForm`, JSON.stringify(valueSubmit)).subscribe((result) => {
         console.log(result);
         this.resetar();
       });
