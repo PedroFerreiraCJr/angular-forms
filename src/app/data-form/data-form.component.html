@@ -146,8 +146,8 @@
         <label class="form-check-label" for="checkbox-termos">Aceito os termos</label>
       </div>
       <app-campo-control-erro [mostrarErro]="!formulario.get('termos')?.valid || false"
-          mensagem="Aceite os termos">
-        </app-campo-control-erro>
+        mensagem="Aceite os termos">
+      </app-campo-control-erro>
     </div>
 
     <!-- exemplo usando o tipo de campo FormArray -->
@@ -161,6 +161,9 @@
             [formControlName]="i">
           <label class="form-check-label" for="checkbox-frameworks-{{ i }}">{{ frameworks[i] }}</label>
         </div>
+        <app-campo-control-erro [mostrarErro]="!formulario.get('frameworks')?.valid || false"
+          mensagem="Selecione uma opção">
+        </app-campo-control-erro>
       </div>
     </div>
   </div>
