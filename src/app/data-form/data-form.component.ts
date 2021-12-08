@@ -45,7 +45,7 @@ export class DataFormComponent implements OnInit {
       nome: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]], // o validator de email só está disponível a partir do Angular 4
       endereco: this.formBuilder.group({
-        cep: [null, Validators.required],
+        cep: [null, [Validators.required, FormValidations.cepValidator]],
         numero: [null, Validators.required],
         complemento: [null],
         rua: [null, Validators.required],
@@ -125,6 +125,17 @@ export class DataFormComponent implements OnInit {
       'is-invalid': this.fieldInvalidAndTouched(field),
       'is-valid': this.fieldValidAndTouched(field)
     };
+  }
+
+  public verificaRequired(field: AbstractControl | string | null): boolean {
+    if (field) {
+      if (typeof (field) === 'string') {
+        return (this.formulario.get(field)?.hasError('required') || false) && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false));
+      }
+      return (!field?.valid && (field?.touched || field?.dirty)) || false;
+    }
+
+    return false;
   }
 
   public fieldInvalidAndTouched(field: AbstractControl | string | null): boolean {
