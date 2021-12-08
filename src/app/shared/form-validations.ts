@@ -1,4 +1,4 @@
-import { AbstractControl, FormArray, FormControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 
 export class FormValidations {
   /**
@@ -22,6 +22,31 @@ export class FormValidations {
       return validarCep.test(cep) ? null : { cepInvalido: true };   // o objeto resultante do erro de validação, tem que ser um objeto, e opcionalmente pode retornar valores truthy
     }
     return null;  // caso não haja erro de validação, deve retornar o valor null
+  }
+
+  public static equalsTo(otherField: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!otherField) {
+        throw new Error('É necessário informar um campo');
+      }
+
+      // validação necessária, pois caso o formulário ainda não esteja pronto, não deve ser
+      //feita a validação de iqualdade dos campos
+      if (!control.root || !(<FormGroup>control.root).controls) {
+        return null;
+      }
+
+      const field: AbstractControl | null = (control.root as FormGroup).get(otherField);
+      if (!field) {
+        throw new Error('É necessário informar um campo válido!');
+      }
+
+      if (field.value !== control.value) {
+        return { equalsTo: otherField };
+      }
+
+      return null;  // caso não haja erro de validação, deve retornar o valor null
+    };
   }
 
   /**

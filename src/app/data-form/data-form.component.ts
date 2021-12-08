@@ -44,6 +44,7 @@ export class DataFormComponent implements OnInit {
     this.formulario = this.formBuilder.group({
       nome: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]], // o validator de email só está disponível a partir do Angular 4
+      confirmarEmail: [null, FormValidations.equalsTo('email')],
       endereco: this.formBuilder.group({
         cep: [null, [Validators.required, FormValidations.cepValidator]],
         numero: [null, Validators.required],
@@ -68,11 +69,8 @@ export class DataFormComponent implements OnInit {
     */
    
     this.estados = this.dropDownService.getEstados();
-
     this.cargos = this.dropDownService.getCargos();
-
     this.tecnologias = this.dropDownService.getTecnologias();
-
     this.newsletterOp = this.dropDownService.getNewsletter();
   }
 
@@ -89,7 +87,7 @@ export class DataFormComponent implements OnInit {
     let valueSubmit = Object.assign({}, this.formulario.value);
 
     valueSubmit = Object.assign(valueSubmit, {
-      frameworks: valueSubmit.map((v: FormControl, i: number) => {
+      frameworks: valueSubmit.frameworks.map((v: FormControl, i: number) => {
         return v ? this.frameworks[i] : null
       }).filter((v: string) => v !== null)
     });
@@ -122,7 +120,7 @@ export class DataFormComponent implements OnInit {
   aplicarCSSErro(campo: string): any {
     const field: AbstractControl | null = this.formulario.get(campo);
     return {
-      'is-invalid': this.fieldInvalidAndTouched(field),
+      'is-invalid': this.fieldInvalidAndTouched(field) || this.verificaRequired(field),
       'is-valid': this.fieldValidAndTouched(field)
     };
   }

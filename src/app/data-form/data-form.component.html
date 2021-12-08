@@ -2,7 +2,7 @@
   <div class="form-row">
     <div class="form-group col-sm-12">
       <label for="nome">Nome</label>
-      <input id="nome" class="form-control" type="email"
+      <input id="nome" class="form-control" type="email" placeholder="Nome"
         formControlName="nome"
         [ngClass]="aplicarCSSErro('nome')">
       <!-- outra forma de realizar a validação dos campos de formulário é acessando a propriedade
@@ -25,6 +25,22 @@
         </app-campo-control-erro>
         <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
           mensagem="E-mail inválido">
+        </app-campo-control-erro>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-sm-12">
+      <label for="confirmarEmail">Confirmação de E-mail</label>
+      <input id="confirmarEmail" class="form-control" type="email"
+        formControlName="confirmarEmail"
+        placeholder="nome@email.com"
+        [ngClass]="aplicarCSSErro('confirmarEmail')">
+        <app-campo-control-erro [mostrarErro]="fieldInvalidAndTouched('confirmacaoEmail')"
+          mensagem="E-mail obrigatório">
+        </app-campo-control-erro>
+        <app-campo-control-erro [mostrarErro]="(formulario.get('confirmarEmail')?.hasError('equalsTo') || false)"
+          mensagem="Os e-mail's não são iguais">
         </app-campo-control-erro>
     </div>
   </div>
