@@ -11,7 +11,8 @@ export class FormValidations {
       if (control instanceof FormArray) {
         return this.validateFormArray(min, control as FormArray);
       }
-      return null;  // caso não haja erro de validação, deve retornar o valor null
+
+      throw new Error('Esta validação requer um campo do tipo FormArray para ser aplicada');
     };
   }
 
@@ -51,7 +52,8 @@ export class FormValidations {
 
   /**
    * 
-   * Essa função é complemento da função de validação de quantidade mínima de seleção dos valores de um FormArray.
+   * Essa função é complemento da função de validação de quantidade mínima de seleção dos
+   * valores de um FormArray.
   */
   private static validateFormArray(min: number = 1, control: FormArray): ValidationErrors | null {
     const totalChecked = control.controls
