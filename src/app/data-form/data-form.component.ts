@@ -5,8 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { DropdownService } from './../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
 import { ConsultaCepService } from './../shared/services/consulta-cep.service';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import { FormValidations } from '../shared/form-validations';
+import { VerificaEmailService } from './services/verifica-email.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-data-form',
@@ -29,7 +31,8 @@ export class DataFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private dropDownService: DropdownService,
-    private cepService: ConsultaCepService) { }
+    private cepService: ConsultaCepService,
+    private verificaEmailService: VerificaEmailService) { }
 
   ngOnInit(): void {
     /*
@@ -43,7 +46,7 @@ export class DataFormComponent implements OnInit {
     // forma simplificada de construir os campos do formulário
     this.formulario = this.formBuilder.group({
       nome: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]], // o validator de email só está disponível a partir do Angular 4
+      email: [null, [Validators.required, Validators.email], this.validarEmail.bind(this)],   // o terceiro parâmetro recebe um ou mais validações assícronas
       confirmarEmail: [null, FormValidations.equalsTo('email')],
       endereco: this.formBuilder.group({
         cep: [null, [Validators.required, FormValidations.cepValidator]],
@@ -72,6 +75,9 @@ export class DataFormComponent implements OnInit {
     this.cargos = this.dropDownService.getCargos();
     this.tecnologias = this.dropDownService.getTecnologias();
     this.newsletterOp = this.dropDownService.getNewsletter();
+    /*
+    this.verificaEmailService.verificarEmail('').subscribe((v) => );
+    */
   }
 
   private buildFrameworks(): FormArray {
@@ -210,5 +216,16 @@ export class DataFormComponent implements OnInit {
 
   public setarTecnologias(): void {
     this.formulario.get('tecnologias')?.setValue(['java', 'javascript']);
+  }
+
+  /**
+   * 
+   * Função de validação de email usando validação assincrona
+  */
+  private validarEmail(control: FormControl) {
+    return this.verificaEmailService.verificarEmail(control.value).
+      pipe(
+        map(emailExiste => emailExiste ? { emailInvalido: true } : null)
+      );
   }
 }

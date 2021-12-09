@@ -26,6 +26,15 @@
         <app-campo-control-erro [mostrarErro]="verificarEmailInvalido()"
           mensagem="E-mail inválido">
         </app-campo-control-erro>
+        <app-campo-control-erro [mostrarErro]="formulario.get('email')?.status === 'PENDING'"
+          mensagem="Validando e-mail...">
+        </app-campo-control-erro>
+        <app-campo-control-erro [mostrarErro]="formulario.get('email')?.status === 'VALID'"
+          mensagem="E-mail válido">
+        </app-campo-control-erro>
+        <app-campo-control-erro [mostrarErro]="formulario.get('email')?.hasError('emailInvalido') || false"
+          mensagem="E-mail já cadastrado">
+        </app-campo-control-erro>
     </div>
   </div>
 
