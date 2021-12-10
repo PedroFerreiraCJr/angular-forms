@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, FormArray, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { DropdownService } from './../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
 import { ConsultaCepService } from './../shared/services/consulta-cep.service';
-import { Observable, pipe } from 'rxjs';
 import { FormValidations } from '../shared/form-validations';
 import { VerificaEmailService } from './services/verifica-email.service';
-import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-data-form',
@@ -45,7 +47,7 @@ export class DataFormComponent implements OnInit {
 
     // forma simplificada de construir os campos do formulário
     this.formulario = this.formBuilder.group({
-      nome: [null, Validators.required],
+      nome: [null, [Validators.required, Validators.minLength(3)]],
       email: [null, [Validators.required, Validators.email], this.validarEmail.bind(this)],   // o terceiro parâmetro recebe um ou mais validações assícronas
       confirmarEmail: [null, FormValidations.equalsTo('email')],
       endereco: this.formBuilder.group({
@@ -227,5 +229,13 @@ export class DataFormComponent implements OnInit {
       pipe(
         map(emailExiste => emailExiste ? { emailInvalido: true } : null)
       );
+  }
+
+  /**
+   * 
+   * Refatoração para aula sobre mensagem de erro centralizada
+  */
+  public mostrarErroCampoNome(): boolean {
+    return (!this.formulario.controls['nome'].valid) && (this.formulario.controls['nome'].touched || this.formulario.controls['nome'].dirty)
   }
 }

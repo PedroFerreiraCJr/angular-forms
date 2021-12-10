@@ -17,5 +17,4 @@ export class CampoControlErroComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
