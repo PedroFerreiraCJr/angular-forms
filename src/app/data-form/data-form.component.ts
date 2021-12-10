@@ -222,7 +222,7 @@ export class DataFormComponent implements OnInit {
    * 
    * Função de validação de email usando validação assincrona
   */
-  private validarEmail(control: FormControl) {
+  private validarEmail(control: FormControl): ValidationErrors | null {
     return this.verificaEmailService.verificarEmail(control.value).
       pipe(
         map(emailExiste => emailExiste ? { emailInvalido: true } : null)
