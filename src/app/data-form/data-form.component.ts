@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, FormArray, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { empty, Observable } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownService } from './../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
@@ -80,6 +80,17 @@ export class DataFormComponent implements OnInit {
     /*
     this.verificaEmailService.verificarEmail('').subscribe((v) => );
     */
+
+    // forma alternativa de se trabalhar com eventos em formulários reativos
+    this.formulario.get('endereco.cep')?.statusChanges
+      .pipe(
+        distinctUntilChanged(),
+        tap(value => console.log('Valor CEP: ', value)),
+        switchMap(status => status === 'VALID' ?
+          this.cepService.consultaCep(this.formulario.get('endereco.cep')?.value) :
+          empty())
+      )
+      .subscribe(dados => dados ? this.popularDadosForm(dados) : {});
   }
 
   private buildFrameworks(): FormArray {

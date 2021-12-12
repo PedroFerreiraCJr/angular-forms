@@ -59,8 +59,7 @@
         <label for="cep">CEP</label>
         <input id="cep" class="form-control" type="text"
           formControlName="cep"
-          [ngClass]="aplicarCSSErro('endereco.cep')"
-          (blur)="consultarCEP()">
+          [ngClass]="aplicarCSSErro('endereco.cep')">
         <app-campo-control-erro [mostrarErro]="verificaRequired('endereco.cep')"
           mensagem="Cep obrigatório">
         </app-campo-control-erro>
