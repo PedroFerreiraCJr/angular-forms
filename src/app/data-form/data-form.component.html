@@ -1,13 +1,10 @@
 <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
   <div class="form-row">
-    <div class="form-group col-sm-12">
-      <label for="nome">Nome</label>
-      <input id="nome" class="form-control" type="text" placeholder="Nome"
-        formControlName="nome"
-        [ngClass]="aplicarCSSErro('nome')">
-      <app-error-msg [control]="formulario.get('nome')" label="Nome">
-      </app-error-msg>
-    </div>
+    <app-input-field
+      id="nome" label="Nome" type="text"
+      [classeCSS]="aplicarCSSErro('nome')"
+      [control]="formulario.get('nome')" formControlName="nome">
+    </app-input-field>
   </div>
 
   <div class="form-row">
