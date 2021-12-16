@@ -1,11 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
-@Component({
-  selector: 'app-base-form',
-  template: '<div></div>'
-})
-export abstract class BaseFormComponent implements OnInit {
+export abstract class BaseFormComponent {
 
   /**
    * Pesquisei sobre o erro relatado pelo compilador do typescript com relação a variável
@@ -15,9 +10,6 @@ export abstract class BaseFormComponent implements OnInit {
   formulario!: FormGroup;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   protected abstract submit(): void;
 
