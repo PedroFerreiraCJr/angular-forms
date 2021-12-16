@@ -10,6 +10,7 @@ import { EstadoBr } from '../shared/models/estado-br.model';
 import { ConsultaCepService } from './../shared/services/consulta-cep.service';
 import { FormValidations } from '../shared/form-validations';
 import { VerificaEmailService } from './services/verifica-email.service';
+import { BaseFormComponent } from '../shared/base-form/base-form.component';
 
 
 @Component({
@@ -17,16 +18,16 @@ import { VerificaEmailService } from './services/verifica-email.service';
   templateUrl: './data-form.component.html',
   styleUrls: ['./data-form.component.scss']
 })
-export class DataFormComponent implements OnInit {
+export class DataFormComponent extends BaseFormComponent implements OnInit {
 
   // variável que representa o formulário
-  formulario!: FormGroup;
+  // formulario!: FormGroup; // variável comentada, pois está herdando de BaseFormComponent
   //estados!: EstadoBr[];
   estados!: Observable<EstadoBr[]>;   // valores de estados, select de estado com autocomplete
   cargos: any[] = [];         // valores de cargos, exemplo de select com uma única opção de seleção
   tecnologias: any[] = [];    // valores de tecnologias, exemplo de select com multiplas opções de seleção
   newsletterOp: any[] = [];   // valores da newsletter, exemplo de radio button
-  
+
   frameworks = ['Angular 2', 'React', 'Vue', 'Sencha'];
 
   constructor(
@@ -34,7 +35,9 @@ export class DataFormComponent implements OnInit {
     private http: HttpClient,
     private dropDownService: DropdownService,
     private cepService: ConsultaCepService,
-    private verificaEmailService: VerificaEmailService) { }
+    private verificaEmailService: VerificaEmailService) {
+    super();
+  }
 
   ngOnInit(): void {
     /*
@@ -72,7 +75,7 @@ export class DataFormComponent implements OnInit {
       console.log(this.estados);
     });
     */
-   
+
     this.estados = this.dropDownService.getEstados();
     this.cargos = this.dropDownService.getCargos();
     this.tecnologias = this.dropDownService.getTecnologias();
@@ -102,7 +105,7 @@ export class DataFormComponent implements OnInit {
     return (this.formulario.get('frameworks') as FormArray).controls;
   }
 
-  public onSubmit(): void {
+  public submit(): void {
     let valueSubmit = Object.assign({}, this.formulario.value);
 
     valueSubmit = Object.assign(valueSubmit, {
@@ -117,72 +120,6 @@ export class DataFormComponent implements OnInit {
         this.resetar();
       });
     }
-    else {
-      this.verificarValidacoesForm(this.formulario);
-    }
-  }
-
-  private verificarValidacoesForm(form: FormGroup): void {
-    Object.keys(form.controls).forEach(campo => {
-      const controle = this.formulario.get(campo);
-      controle?.markAsDirty();
-      if (controle instanceof FormGroup) {
-        this.verificarValidacoesForm(controle);
-      }
-    });
-  }
-
-  public resetar(): void {
-    this.formulario.reset();
-  }
-
-  aplicarCSSErro(campo: string): any {
-    const field: AbstractControl | null = this.formulario.get(campo);
-    return {
-      'is-invalid': this.fieldInvalidAndTouched(field) || this.verificaRequired(field),
-      'is-valid': this.fieldValidAndTouched(field)
-    };
-  }
-
-  public verificaRequired(field: AbstractControl | string | null): boolean {
-    if (field) {
-      if (typeof (field) === 'string') {
-        return (this.formulario.get(field)?.hasError('required') || false) && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false));
-      }
-      return (!field?.valid && (field?.touched || field?.dirty)) || false;
-    }
-
-    return false;
-  }
-
-  public fieldInvalidAndTouched(field: AbstractControl | string | null): boolean {
-    if (field) {
-      if (typeof (field) === 'string') {
-        return !this.formulario.get(field)?.valid && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false));
-      }
-      return (!field?.valid && (field?.touched || field?.dirty)) || false;
-    }
-
-    return false;
-  }
-
-  public fieldValidAndTouched(field: AbstractControl | string | null): boolean {
-    if (field) {
-      if (typeof (field) === 'string') {
-        return this.formulario.get(field)?.valid && ((this.formulario.get(field)?.touched || false) || (this.formulario.get(field)?.dirty || false)) || false;
-      }
-      return (field?.valid && (field?.touched || field?.dirty)) || false;
-    }
-
-    return false;
-  }
-
-  public verificarEmailInvalido(): boolean {
-    const fieldEmail = this.formulario.get('email');
-    if (fieldEmail?.errors) {
-      return fieldEmail.errors['email'] && fieldEmail.touched;
-    }
-    return false;
   }
 
   public consultarCEP(): void {
