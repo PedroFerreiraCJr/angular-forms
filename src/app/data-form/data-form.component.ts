@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, FormArray, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormBuilder, Validators, FormControl, FormArray, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { empty, Observable } from 'rxjs';
+import { empty } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownService } from './../shared/services/dropdown.service';
 import { EstadoBr } from '../shared/models/estado-br.model';
+import { CidadeBr } from '../shared/models/cidade-br.model';
 import { ConsultaCepService } from './../shared/services/consulta-cep.service';
 import { FormValidations } from '../shared/form-validations';
 import { VerificaEmailService } from './services/verifica-email.service';
@@ -22,8 +23,12 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
 
   // variável que representa o formulário
   // formulario!: FormGroup; // variável comentada, pois está herdando de BaseFormComponent
-  //estados!: EstadoBr[];
-  estados!: Observable<EstadoBr[]>;   // valores de estados, select de estado com autocomplete
+  estados!: EstadoBr[];
+  /**
+   * Implementação feita na aula sobre combobox aninhado
+  */
+  cidades!: CidadeBr[]; 
+  //estados!: Observable<EstadoBr[]>;   // valores de estados, select de estado com autocomplete
   cargos: any[] = [];         // valores de cargos, exemplo de select com uma única opção de seleção
   tecnologias: any[] = [];    // valores de tecnologias, exemplo de select com multiplas opções de seleção
   newsletterOp: any[] = [];   // valores da newsletter, exemplo de radio button
@@ -76,7 +81,14 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
     });
     */
 
-    this.estados = this.dropDownService.getEstados();
+    //this.estados = this.dropDownService.getEstados();
+    /**
+     * Implementação feita na aula sobre combobox aninhado
+    */
+    this.dropDownService.getEstados().subscribe((estados) => {
+      this.estados = estados;
+    });
+
     this.cargos = this.dropDownService.getCargos();
     this.tecnologias = this.dropDownService.getTecnologias();
     this.newsletterOp = this.dropDownService.getNewsletter();
@@ -94,6 +106,20 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
           empty())
       )
       .subscribe(dados => dados ? this.popularDadosForm(dados) : {});
+    
+    /**
+     * Implementação feita na aula sobre combobox aninhado
+    */
+    this.formulario.get('endereco.estado')?.valueChanges
+      .pipe(
+        tap(estado => console.log('novo estado', estado)),
+        map((sigla: string) => this.estados.filter(e => e.sigla === sigla)),
+        map((estados: EstadoBr[]) => estados && estados.length > 0 ? estados[0].id : -1),
+        tap(console.log), // recebe o id do estado, ou -1
+        switchMap((id: number) => this.dropDownService.getCidades(id)),
+        tap(console.log)  // lista com as cidades para determinado estado consultado pelo id
+      )
+      .subscribe(cidades => this.cidades = cidades);
   }
 
   private buildFrameworks(): FormArray {
