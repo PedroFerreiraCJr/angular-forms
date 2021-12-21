@@ -1,6 +1,6 @@
 <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
   <div class="form-row">
-    <app-input-field
+    <app-input-field class="form-group col-sm-12"
       id="nome" label="Nome" type="text"
       [classeCSS]="aplicarCSSErro('nome')"
       [control]="formulario.get('nome')" formControlName="nome">
