@@ -112,7 +112,7 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
     */
     this.formulario.get('endereco.estado')?.valueChanges
       .pipe(
-        tap(estado => console.log('novo estado', estado)),
+        tap((sigla: string) => console.log('novo estado', sigla)),
         map((sigla: string) => this.estados.filter(e => e.sigla === sigla)),
         map((estados: EstadoBr[]) => estados && estados.length > 0 ? estados[0].id : -1),
         tap(console.log), // recebe o id do estado, ou -1

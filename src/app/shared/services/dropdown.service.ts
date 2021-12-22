@@ -42,7 +42,7 @@ export class DropdownService {
     ];
   }
 
-  public getCidades(idEstado: number): Observable<any[]> {
+  public getCidades(idEstado: number): Observable<CidadeBr[]> {
     return (this.http.get('assets/cidades_br.json') as Observable<CidadeBr[]>)
       .pipe(
         map((cidades: CidadeBr[]) => cidades
